@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText etUserNameRe,etPasswordRe,etPasswordConfirmRe;
@@ -34,14 +32,14 @@ public class MainActivity extends AppCompatActivity {
     }
     private void handlerClick() {
         btRegister.setOnClickListener(view -> {
-           checkDataEntered();
-            if (db.addUser(etUserNameRe.getText().toString(),etPasswordRe.getText().toString())) {
+           if(checkDataEntered()) {
+               if (db.addUser(etUserNameRe.getText().toString(),etPasswordRe.getText().toString())) {
 
-                Utils.showToast(this,"already Register");
-            } else {
-                Utils.showToast(this,"something wrong");
-            }
-
+                   Utils.showToast(this, "Register successful");
+               } else {
+                   Utils.showToast(this, "something wrong");
+               }
+           }
 
         });
     }
@@ -51,25 +49,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void checkDataEntered() {
+    private boolean checkDataEntered() {
 
-        if (isEmpty(etUserNameRe)){
-            Utils.showToast(this,"You Must Enter UserName");
+        if (isEmpty(etUserNameRe)) {
+            Utils.showToast(this, "You Must Enter UserName");
+            return false;
         }
-        if (isEmpty(etPasswordRe)){
-            Utils.showToast(this,"You Must Enter Password");
+       else if (isEmpty(etPasswordRe)) {
+            Utils.showToast(this, "You Must Enter Password");
+            return false;
+        } else if (etPasswordRe.getText().toString().length() < 6) {
+            Utils.showToast(this, "Password Length should be greater than 6");
+            return false;
+        } else if (isEmpty(etPasswordConfirmRe)) {
+            Utils.showToast(this, "You Must Enter Confirm Password");
+            return false;
+        } else if (!etPasswordRe.getText().toString().equals(etPasswordConfirmRe.getText().toString())) {
+            Utils.showToast(this, "You Must Be Same Password");
+            return false;
+        } else {
+            return true;
         }
-        if (isEmpty(etPasswordConfirmRe)){
-            Utils.showToast(this,"You Must Enter Confirm Password");
-        }
-         if (etPasswordRe != etPasswordConfirmRe){
-            Utils.showToast(this,"You Must Be Same Password");
-        }
-        else {
-            Utils.showToast(this,"please try again");
-        }
-
-
 
     }
-}
+    }
