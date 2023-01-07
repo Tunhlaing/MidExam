@@ -2,15 +2,18 @@ package com.example.midexam;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     EditText etUserNameRe,etPasswordRe,etPasswordConfirmRe;
-    Button btRegister;
+    Button btRegister,btLoginMain;
     RegisterDb db;
+    TextView tvAlreadyAcc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         etPasswordRe = findViewById(R.id.etPasswordRe);
         etPasswordConfirmRe = findViewById(R.id.etPasswordConfirmRe);
         btRegister = findViewById(R.id.btRegister);
+        tvAlreadyAcc = findViewById(R.id.tvAlreadyAcc);
+        btLoginMain = findViewById(R.id.btLoginMain);
 
 
     }
@@ -36,23 +41,34 @@ public class MainActivity extends AppCompatActivity {
                if (db.addUser(etUserNameRe.getText().toString(),etPasswordRe.getText().toString())) {
 
                    Utils.showToast(this, "Register successful");
+                   Intent i = new Intent(this,LoginActivity.class);
+                   startActivity(i);
                } else {
                    Utils.showToast(this, "something wrong");
                }
+
            }
 
         });
+        btLoginMain.setOnClickListener((view -> {
+            Intent i = new Intent(this,LoginActivity.class);
+            startActivity(i);
+
+        }));
     }
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
-
     }
 
     private boolean checkDataEntered() {
 
         if (isEmpty(etUserNameRe)) {
             Utils.showToast(this, "You Must Enter UserName");
+            return false;
+        }
+        if(db.checkUserName(etUserNameRe.getText().toString())){
+            Utils.showToast(this,"UserName is already exist.");
             return false;
         }
        else if (isEmpty(etPasswordRe)) {
