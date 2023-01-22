@@ -17,6 +17,8 @@ public class RegisterDb extends SQLiteOpenHelper {
     private static final String DB_NAME = "register_db";
     private static final int DB_VERSION = 1;
     private final String REGISTER_TBL = "tbl_register";
+    private final String STATUS_TBL = "tbl_register";
+
 
     public RegisterDb(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -26,6 +28,8 @@ public class RegisterDb extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + REGISTER_TBL + "(register_id integer PRIMARY KEY AUTOINCREMENT, user_name TEXT , password TEXT , status TEXT )";
         db.execSQL(query);
+        String query2 = "CREATE TABLE " + STATUS_TBL + "(status_id integer , status TEXT)";
+        db.execSQL(query2);
     }
 
     @Override
